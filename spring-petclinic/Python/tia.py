@@ -1,5 +1,6 @@
 import csv
 import subprocess
+import os
 
 # Step 1: Get changed files from Git
 changed_files = subprocess.check_output(
@@ -8,9 +9,13 @@ changed_files = subprocess.check_output(
 
 print("Changed files:", changed_files)
 
-# Step 2: Read mapping
+# Step 2: Build path for mapping.csv (same folder as tia.py)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+mapping_path = os.path.join(script_dir, "mapping.csv")
+
+# Step 3: Read mapping.csv and find impacted tests
 impacted_tests = []
-with open("../mapping.csv", newline="") as csvfile:
+with open(mapping_path, newline="") as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         for file in changed_files:
